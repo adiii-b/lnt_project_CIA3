@@ -1,0 +1,292 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Colorful To‑Do App</title>
+  <!-- Bootstrap 5 -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- jQuery (required by the user spec) -->
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+  <!-- Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  <!-- Font Awesome for icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+
+  <style>
+    :root{
+      --card-radius: 1.25rem;
+    }
+    body{
+      min-height:100vh;
+      background: linear-gradient(135deg,#FFD6E0 0%, #D6F7FF 50%, #E8FFD6 100%);
+      font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+    }
+    .app-shell{
+      max-width:900px;
+      margin:3.5rem auto;
+      padding:1.25rem;
+    }
+    .brand{
+      font-weight:700;
+      letter-spacing:0.4px;
+    }
+    .card-fancy{
+      border:none;
+      border-radius:var(--card-radius);
+      box-shadow: 0 6px 20px rgba(34,34,34,0.08);
+      overflow:visible;
+    }
+    .task-item{
+      transition: all .18s ease;
+    }
+    .task-item.completed .task-title{
+      text-decoration: line-through;
+      opacity:0.6;
+    }
+    .badge-pulse{
+      animation: pulse 2s infinite;
+    }
+    @keyframes pulse{
+      0%{ transform: scale(1); opacity:1 }
+      50%{ transform: scale(1.05); opacity:0.85 }
+      100%{ transform: scale(1); opacity:1 }
+    }
+    .no-tasks{
+      opacity:0.8;
+    }
+    .list-group-item{ border-radius: .75rem; }
+    .controls .btn{
+      border-radius: .75rem;
+    }
+    .task-tags{ font-size: .8rem; }
+    @media (max-width:575px){
+      .app-shell{ margin:1rem; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container app-shell">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+      <div class="d-flex align-items-center gap-3">
+        <div class="rounded-circle bg-white p-2 shadow-sm" style="width:56px;height:56px;display:grid;place-items:center;">
+          <i class="fa-solid fa-list-check fa-lg text-gradient" style="background:linear-gradient(45deg,#6EE7B7,#60A5FA);-webkit-background-clip:text;color:transparent"></i>
+        </div>
+        <div>
+          <div class="brand h5 mb-0">SparkTasks</div>
+          <small class="text-muted">Colorful, responsive to‑do app</small>
+        </div>
+      </div>
+      <div>
+        <small class="text-muted">Tips: double-click a task to edit • uses localStorage</small>
+      </div>
+    </div>
+
+    <div class="card card-fancy p-4 bg-white">
+      <div class="row g-3">
+        <div class="col-12 col-md-8">
+          <div class="input-group shadow-sm">
+            <input id="taskInput" type="text" class="form-control form-control-lg" placeholder="Add a new task — press Enter or click Add" aria-label="New task">
+            <button id="addBtn" class="btn btn-primary btn-lg" type="button"><i class="fa-solid fa-plus me-2"></i>Add</button>
+          </div>
+        </div>
+        <div class="col-12 col-md-4 d-flex gap-2 align-items-center controls">
+          <div class="w-100">
+            <select id="prioritySelect" class="form-select form-select-lg">
+              <option value="normal" selected>Priority: Normal</option>
+              <option value="high">Priority: High</option>
+              <option value="low">Priority: Low</option>
+            </select>
+          </div>
+          <div>
+            <button id="clearCompleted" class="btn btn-outline-danger" title="Clear completed tasks"><i class="fa-solid fa-trash-can"></i></button>
+          </div>
+        </div>
+
+        <div class="col-12">
+          <div class="d-flex flex-wrap gap-2 align-items-center mb-2">
+            <div class="btn-group" role="group">
+              <button class="btn btn-sm btn-outline-secondary filter-btn active" data-filter="all">All</button>
+              <button class="btn btn-sm btn-outline-secondary filter-btn" data-filter="active">Active</button>
+              <button class="btn btn-sm btn-outline-secondary filter-btn" data-filter="completed">Completed</button>
+            </div>
+            <div class="ms-auto">
+              <span class="badge bg-success badge-pulse" id="countActive">0 active</span>
+            </div>
+          </div>
+
+          <ul id="taskList" class="list-group">
+            <!-- tasks inserted here -->
+          </ul>
+
+          <div id="emptyState" class="text-center text-muted mt-3 no-tasks">
+            <i class="fa-regular fa-face-smile fa-2x mb-2"></i>
+            <div>No tasks yet — Add something fun to do!</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="text-center mt-3 text-muted small">
+      Built with HTML • CSS • JavaScript • Bootstrap • jQuery
+    </div>
+  </div>
+
+  <!-- Edit Modal -->
+  <div class="modal fade" id="editModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Edit Task</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <input id="editInput" class="form-control" type="text">
+          <div class="mt-2">
+            <label class="form-label small">Priority</label>
+            <select id="editPriority" class="form-select">
+              <option value="normal">Normal</option>
+              <option value="high">High</option>
+              <option value="low">Low</option>
+            </select>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button id="saveEdit" type="button" class="btn btn-primary">Save</button>
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // App state
+    let tasks = []; // {id, title, completed, priority, createdAt}
+    const STORAGE_KEY = 'sparktasks_v1';
+
+    // DOM refs
+    const $taskInput = $('#taskInput');
+    const $addBtn = $('#addBtn');
+    const $taskList = $('#taskList');
+    const $emptyState = $('#emptyState');
+    const $countActive = $('#countActive');
+    const $prioritySelect = $('#prioritySelect');
+
+    const editModal = new bootstrap.Modal(document.getElementById('editModal'));
+    let editTaskId = null;
+
+    // Load
+    function load() {
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if(raw) tasks = JSON.parse(raw);
+      render();
+    }
+
+    // Save
+    function save(){
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(tasks));
+    }
+
+    // Helpers
+    function uid(){ return 't_' + Math.random().toString(36).slice(2,9); }
+    function formatElapsed(ts){ const d = Date.now() - ts; if(d<60000) return 'just now'; if(d<3600000) return Math.floor(d/60000)+'m ago'; if(d<86400000) return Math.floor(d/3600000)+'h ago'; return Math.floor(d/86400000)+'d ago'; }
+
+    function addTask(title, priority='normal'){
+      if(!title || !title.trim()) return;
+      tasks.unshift({ id: uid(), title: title.trim(), completed:false, priority, createdAt: Date.now() });
+      save(); render();
+    }
+
+    function updateTask(id, fields){
+    const t = tasks.find(x=>x.id===id); if(!t) return; Object.assign(t, fields); save(); render();
+    }
+
+    function removeTask(id){ tasks = tasks.filter(x=>x.id!==id); save(); render(); }
+
+    function clearCompleted(){ tasks = tasks.filter(x=>!x.completed); save(); render(); }
+
+    function setFilter(filter){ $('.filter-btn').removeClass('active'); $(".filter-btn[data-filter='"+filter+"']").addClass('active'); render(); }
+
+    // Rendering
+    function render(){
+      const filter = $('.filter-btn.active').data('filter') || 'all';
+      $taskList.empty();
+      let visibleCount = 0;
+      const filtered = tasks.filter(t=>{
+        if(filter==='all') return true;
+        if(filter==='active') return !t.completed;
+        if(filter==='completed') return t.completed;
+      });
+
+      if(filtered.length===0){ $emptyState.show(); } else { $emptyState.hide(); }
+
+      filtered.forEach(task => {
+        const li = $("<li>").addClass('list-group-item task-item d-flex align-items-start gap-3').attr('data-id',task.id);
+        if(task.completed) li.addClass('completed');
+
+        const checkbox = $('<input type="checkbox" class="form-check-input mt-1">').prop('checked', task.completed);
+        checkbox.on('change', ()=>{ updateTask(task.id, {completed: checkbox.prop('checked')}); });
+
+        const titleWrap = $('<div class="flex-grow-1">');
+        const title = $('<div>').addClass('task-title fw-semibold').text(task.title).attr('title', task.title);
+        const meta = $('<div class="small text-muted mt-1">').text(formatElapsed(task.createdAt));
+        const tag = $('<span>').addClass('badge rounded-pill ms-2 task-tags').text(task.priority);
+        if(task.priority==='high') tag.addClass('bg-danger text-white');
+        if(task.priority==='low') tag.addClass('bg-info text-dark');
+        if(task.priority==='normal') tag.addClass('bg-secondary text-white');
+
+        titleWrap.append(title).append($('<div class="mt-1 d-flex gap-2 align-items-center">').append(meta).append(tag));
+
+        const actions = $('<div class="d-flex flex-column align-items-end gap-2 ms-2">');
+        const editBtn = $('<button class="btn btn-sm btn-light shadow-sm" title="Edit"><i class="fa-solid fa-pen"></i></button>');
+        const delBtn = $('<button class="btn btn-sm btn-outline-danger" title="Delete"><i class="fa-solid fa-trash"></i></button>');
+
+        editBtn.on('click', ()=> openEdit(task.id));
+        delBtn.on('click', ()=>{ if(confirm('Delete this task?')) removeTask(task.id); });
+
+        actions.append(editBtn).append(delBtn);
+
+        li.append($('<div class="d-flex align-items-start">').append(checkbox)).append(titleWrap).append(actions);
+
+        // double click to edit
+        li.on('dblclick', ()=> openEdit(task.id));
+
+        $taskList.append(li);
+        visibleCount += !task.completed ? 1 : 0;
+      });
+
+      const activeCount = tasks.filter(t=>!t.completed).length;
+      $countActive.text(activeCount + (activeCount===1? ' active' : ' active'));
+    }
+
+    // Edit flow
+    function openEdit(id){
+      const t = tasks.find(x=>x.id===id); if(!t) return;
+      editTaskId = id;
+      $('#editInput').val(t.title);
+      $('#editPriority').val(t.priority);
+      editModal.show();
+    }
+
+    $('#saveEdit').on('click', ()=>{
+      const newTitle = $('#editInput').val();
+      const newPriority = $('#editPriority').val();
+      if(!newTitle || !newTitle.trim()) return alert('Title cannot be empty');
+      updateTask(editTaskId, { title: newTitle.trim(), priority: newPriority });
+      editModal.hide();
+    });
+
+    // Events
+    $addBtn.on('click', ()=>{ addTask($taskInput.val(), $prioritySelect.val()); $taskInput.val('').focus(); });
+    $taskInput.on('keypress', (e)=>{ if(e.which===13){ addTask($taskInput.val(), $prioritySelect.val()); $taskInput.val(''); } });
+    $(document).on('click', '.filter-btn', function(){ setFilter($(this).data('filter')); });
+    $('#clearCompleted').on('click', ()=>{ if(confirm('Remove all completed tasks?')) clearCompleted(); });
+
+    // Initialize
+    load();
+
+    // Expose for debugging (optional)
+    window.sparktasks = { addTask, updateTask, removeTask, getAll: ()=>tasks };
+  </script>
+</body>
+</html>
