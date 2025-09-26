@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Nikeys Landing Page</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #111;
+      color: #fff;
+    }
+    header {
+      background: #111;
+      color: white;
+      padding: 15px 50px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+    }
+    header h1 {
+      font-size: 28px;
+      color: #b11226; /* wine red */
+      letter-spacing: 2px;
+    }
+    nav ul {
+      list-style: none;
+      display: flex;
+      gap: 20px;
+      margin: 0;
+      padding: 0;
+    }
+    nav a {
+      text-decoration: none;
+      color: white;
+      font-weight: bold;
+      transition: color 0.3s;
+    }
+    nav a:hover {
+      color: #b11226;
+    }
+    .hero {
+      background: url("https://images.unsplash.com/photo-1600185365483-26d7b8e6e0c2") center/cover no-repeat;
+      height: 90vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      color: white;
+    }
+    .hero h2 {
+      font-size: 60px;
+      margin: 0;
+    }
+    .hero p {
+      font-size: 20px;
+      margin: 10px 0 20px;
+    }
+    .btn {
+      background: #b11226;
+      color: white;
+      border: none;
+      padding: 12px 25px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: background 0.3s;
+      border-radius: 5px;
+    }
+    .btn:hover {
+      background: #e01e37;
+    }
+    section {
+      padding: 60px 10%;
+    }
+    .features {
+      display: flex;
+      justify-content: space-around;
+      flex-wrap: wrap;
+      gap: 20px;
+    }
+    .feature {
+      background: #1a1a1a;
+      padding: 20px;
+      border-radius: 10px;
+      flex: 1 1 250px;
+      text-align: center;
+    }
+    .gallery {
+      position: relative;
+      text-align: center;
+    }
+    .gallery img {
+      width: 100%;
+      max-height: 400px;
+      object-fit: cover;
+      border-radius: 10px;
+    }
+    .gallery button {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      background: rgba(0,0,0,0.6);
+      border: none;
+      color: white;
+      font-size: 24px;
+      padding: 10px;
+      cursor: pointer;
+    }
+    .gallery button.left { left: 10px; }
+    .gallery button.right { right: 10px; }
+    .pricing {
+      display: flex;
+      justify-content: space-around;
+      flex-wrap: wrap;
+      gap: 20px;
+    }
+    .price-card {
+      background: #1a1a1a;
+      padding: 20px;
+      border-radius: 10px;
+      flex: 1 1 250px;
+      text-align: center;
+    }
+    .price-card h3 {
+      color: #b11226;
+    }
+    .testimonials {
+      display: flex;
+      justify-content: space-around;
+      flex-wrap: wrap;
+      gap: 20px;
+    }
+    .testimonial {
+      background: #1a1a1a;
+      padding: 20px;
+      border-radius: 10px;
+      flex: 1 1 250px;
+      text-align: center;
+    }
+    .contact form {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      max-width: 500px;
+      margin: auto;
+    }
+    .contact input, .contact textarea {
+      padding: 10px;
+      border: none;
+      border-radius: 5px;
+    }
+    .contact button {
+      background: #b11226;
+      color: white;
+      border: none;
+      padding: 12px;
+      cursor: pointer;
+      border-radius: 5px;
+    }
+    footer {
+      background: #000;
+      color: #aaa;
+      text-align: center;
+      padding: 20px;
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>NIKEYS</h1>
+    <nav>
+      <ul>
+        <li><a href="#hero">Home</a></li>
+        <li><a href="#features">Features</a></li>
+        <li><a href="#gallery">Gallery</a></li>
+        <li><a href="#pricing">Pricing</a></li>
+        <li><a href="#testimonials">Testimonials</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <section class="hero" id="hero">
+    <h2>Just Do It</h2>
+    <p>Experience comfort, style, and performance with Nikeys.</p>
+    <button class="btn">Shop Now</button>
+  </section>
+
+  <section id="features">
+    <h2 style="text-align:center;">Why Nikeys?</h2>
+    <div class="features">
+      <div class="feature">
+        <h3>Comfort</h3>
+        <p>Engineered cushioning for all-day wear.</p>
+      </div>
+      <div class="feature">
+        <h3>Style</h3>
+        <p>Iconic designs that never go out of fashion.</p>
+      </div>
+      <div class="feature">
+        <h3>Performance</h3>
+        <p>Trusted by athletes worldwide for peak performance.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="gallery">
+    <h2 style="text-align:center;">Gallery</h2>
+    <div class="gallery">
+      <button class="left">&#10094;</button>
+      <img id="gallery-img" src="https://images.unsplash.com/photo-1519744346361-1f91cfd83baf" alt="Nikeys Shoe">
+      <button class="right">&#10095;</button>
+    </div>
+  </section>
+
+  <section id="pricing">
+    <h2 style="text-align:center;">Pricing</h2>
+    <div class="pricing">
+      <div class="price-card">
+        <h3>Basic</h3>
+        <p>$99</p>
+        <button class="btn">Buy Now</button>
+      </div>
+      <div class="price-card">
+        <h3>Premium</h3>
+        <p>$149</p>
+        <button class="btn">Buy Now</button>
+      </div>
+      <div class="price-card">
+        <h3>Limited Edition</h3>
+        <p>$199</p>
+        <button class="btn">Buy Now</button>
+      </div>
+    </div>
+  </section>
+
+  <section id="testimonials">
+    <h2 style="text-align:center;">What Our Customers Say</h2>
+    <div class="testimonials">
+      <div class="testimonial"><p>"Best shoes ever!"</p><strong>- Adithya Boopy</strong></div>
+      <div class="testimonial"><p>"Perfect blend of comfort and style."</p><strong>- Rahul P P</strong></div>
+      <div class="testimonial"><p>"Nikeys never disappoints!"</p><strong>- Abhi Natty</strong></div>
+    </div>
+  </section>
+
+  <section id="contact" class="contact">
+    <h2 style="text-align:center;">Contact Us</h2>
+    <form id="contactForm">
+      <input type="text" id="name" placeholder="Your Name" required>
+      <input type="email" id="email" placeholder="Your Email" required>
+      <textarea id="message" placeholder="Your Message" required></textarea>
+      <button type="submit">Send</button>
+    </form>
+  </section>
+
+  <footer>
+    <p>&copy; 2025 Nikeys. All Rights Reserved.</p>
+  </footer>
+
+  <script>
+    // Gallery carousel
+    const images = [
+      "https://images.unsplash.com/photo-1519744346361-1f91cfd83baf",
+      "https://images.unsplash.com/photo-1606813902449-74a5d5d87c74",
+      "https://images.unsplash.com/photo-1606813902784-3b2d6b2f8b58"
+    ];
+    let index = 0;
+    const galleryImg = document.getElementById("gallery-img");
+    document.querySelector(".left").onclick = () => {
+      index = (index - 1 + images.length) % images.length;
+      galleryImg.src = images[index];
+    };
+    document.querySelector(".right").onclick = () => {
+      index = (index + 1) % images.length;
+      galleryImg.src = images[index];
+    };
+
+    // Contact form validation
+    document.getElementById("contactForm").addEventListener("submit", function(e) {
+      e.preventDefault();
+      const name = document.getElementById("name").value.trim();
+      const email = document.getElementById("email").value.trim();
+      const message = document.getElementById("message").value.trim();
+      if (!name || !email || !message) {
+        alert("Please fill in all fields.");
+      } else {
+        alert("Thank you, " + name + "! Your message has been sent.");
+        this.reset();
+      }
+    });
+  </script>
+</body>
+</html>
